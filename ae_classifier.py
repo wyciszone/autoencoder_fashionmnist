@@ -8,15 +8,14 @@ def train_autoencoder_for_class(autoencoder, class_data, epochs=50, batch_size=2
 @tf.function(reduce_retracing=True)
 def classify_image(image, autoencoders):
     errors = []
-    image = tf.expand_dims(image, axis=0)  # Dodanie wymiaru batch
+    image = tf.expand_dims(image, axis=0) 
     for ae in autoencoders:
-        reconstruction = ae(image, training=False)  # Bez predict
+        reconstruction = ae(image, training=False) 
         error = tf.reduce_mean(tf.square(image - reconstruction))
         errors.append(error)
     return tf.argmin(errors)
 
 def train_all_autoencoders(X_train, y_train, autoencoders):
-    # Trenowanie autoenkoderów dla każdej klasy
     for i, ae in enumerate(autoencoders):
         print(f"Training autoencoder for class {i}")
         class_data = X_train[y_train.flatten() == i]
@@ -24,7 +23,6 @@ def train_all_autoencoders(X_train, y_train, autoencoders):
     
     return autoencoders
 
-# Testowanie klasyfikacji
 def make_class_predictions(X_test, autoencoders):
     y_pred = []
     for idx, img in enumerate(X_test): 
